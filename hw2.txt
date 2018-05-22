@@ -1,0 +1,6 @@
+
+grab image every ~second
+calculate average intensity
+store in csv file as pandas df with timestamp
+
+store image in folder with name corresponding to timestamp
