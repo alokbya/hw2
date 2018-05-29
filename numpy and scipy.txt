@@ -1,0 +1,10 @@
+Generalized expectation maximization
+E-Step: Figure out statistics
+M-Step: Maximization
+
+
+Matrix Multiplication: O(n^3)
+
+
+Orthoginal Distance Regression:
+Use this for most stuff e.g. correlation between height and weight
