@@ -59,7 +59,7 @@ if __name__ == '__main__':
 	w = Webcam()
 	w.register_callback(callback, 1)
 	w.start()
-	w.grab_image()
 	input('Hit Enter to Stop')
+
 
 	w.stop()
