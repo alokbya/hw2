@@ -7,7 +7,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import random
-
+import operator
+import collections
 
 class MUCamera:
 
@@ -19,6 +20,7 @@ class MUCamera:
         self.counter = 0
         self.df = {}
         self.image_intensity = 0
+        self.pro_color = 0          # stores proportion of most common color
 
     def mean_filter(self, l, width=3):
         place_holder = 0
@@ -38,7 +40,7 @@ class MUCamera:
         return new
     
     def filtered_average_intensity(self):
-        df = pd.read_csv('inte.csv')
+        df = pd.read_csv('overnight_1.csv')
         self.inte = df['Intensity'].tolist()
         self.dates = df['Date'].tolist()
         
@@ -113,9 +115,31 @@ class MUCamera:
         w = Webcam()
         w.start()
         im = w.grab_image()
-        colors = im.getcolors()
+        colors = np.array(im)
         w.stop()
-        return colors
+        color_key = {'[1, 2, 3]': 1}
+        color_list = []
+        
+        # check each element
+        for i in range(len(colors)):
+            for j in range(len(colors[i])):
+                color_list.append(str(colors[i][j]))
+                try:
+                    color_key[str(colors[i][j])] += 1
+                except:
+                     color_key[str(colors[i][j])] = 1
+
+        dd = collections.defaultdict(list)
+        for k, v in color_key.items():
+            dd[v].append(k)
+            x = sorted(dd.items())
+        
+        common_num = color_key[x[-3][1][0]]     # occurance of common color
+        self.pro_color = common_num/len(color_list)
+        print(color_key[x[-3][1][0]])
+
+        return x[-3][1][0]
+        
 
 if __name__ == '__main__':
     # create csv file
@@ -124,6 +148,7 @@ if __name__ == '__main__':
         
     # print(datetime.datetime.now())
     cam = MUCamera()
-    cam.get_image()
-    cam.filtered_average_intensity()
+    # cam.get_image()
+    # cam.filtered_average_intensity()
     print(cam.get_color())
+    print(cam.pro_color)

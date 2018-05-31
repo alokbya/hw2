@@ -4,6 +4,8 @@ import hw2
 import csv
 import matplotlib.pyplot as plt
 import math
+import operator
+import collections
 
 def mean_filter(l, width=3):
     place_holder = 0
@@ -43,14 +45,21 @@ def filtered_average_intensity():
     # print(dates)
     index = list(range(len(inte)))
     
-
-    
     # plot the graph
     plt.plot(index, inte)
     plt.ylabel('Intensity')
     plt.xlabel('Time')
     plt.show()
 
+def color(color_key):
+    d = color_key
+    dd = collections.defaultdict(list)
+    for k, v in d.items():
+        dd[v].append(k)
+    x = sorted(dd.items())
 
+
+    return x[-2]
 if __name__ == '__main__':
-    filtered_average_intensity()
+    trial_key = {'blue': 2000, 'red': 1, 'green': 10, 'yellow': 2001}
+    print(color(trial_key))
