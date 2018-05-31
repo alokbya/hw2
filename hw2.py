@@ -51,12 +51,10 @@ class MUCamera:
 
         # perform movmean averaging on data to smooth
         # inte = mean_filter(inte, 3)
-        self.inte = mean_filter(self.inte, 150)
+        self.inte = self.mean_filter(self.inte, 150)
         print(self.inte)
         # print(dates)
         index = list(range(len(self.inte)))
-        
-
         
         # plot the graph
         plt.plot(index, self.inte)
@@ -80,8 +78,6 @@ class MUCamera:
     def average_intensity(self, im):
         return ImageStat.Stat(im).mean[0]
 
-    def filtered_average_intensity(self, im):
-        return 0
 
     def call_back(self, image):
         # calculate the average intensity in the image
@@ -112,6 +108,6 @@ if __name__ == '__main__':
     #     f.write('Date/Time, Intensity')
         
     # print(datetime.datetime.now())
-    # cam = MUCamera()
+    cam = MUCamera()
     # cam.get_image()
-    filtered_average_intensity()
+    cam.filtered_average_intensity()
