@@ -16,8 +16,8 @@ class MUCamera:
         self.nums = []
         self.counter = 0
         self.df = {}
-        
-        
+        self.image_intensity = 0
+
     def mean_filter(self, l, width=3):
         place_holder = 0
         new = []
@@ -33,10 +33,8 @@ class MUCamera:
             new.append(round(place_holder/width, 2))
             place_holder = 0
     
-        
         return new
     
-
     def filtered_average_intensity(self):
         df = pd.read_csv('inte.csv')
         self.inte = df['Intensity'].tolist()
@@ -62,34 +60,31 @@ class MUCamera:
         plt.xlabel('Time')
         plt.show()
 
-        def plot_intense(self, df):
-            # get times
-
-            plt.plot(df['Date'], df['Intensity'])
-            plt.ylabel('Intensity')
-            plt.xlabel('Time')
-            plt.show()
+    def plot_intense(self, df):
+        # get times
+        plt.plot(df['Date'], df['Intensity'])
+        plt.ylabel('Intensity')
+        plt.xlabel('Time')
+        plt.show()
             
-            return 0
-
     def to_csv(self, df):
         df.to_csv('inte.csv', sep=',')
             
     def average_intensity(self, im):
         return ImageStat.Stat(im).mean[0]
 
-
     def call_back(self, image):
         # calculate the average intensity in the image
         intensity = self.average_intensity(image)
         # show the image
         # image.show()
+        # store image intensity in class variable
+        self.image_intensity = intensity
         self.inte.append(intensity)
+        # format the date
         self.dates.append(datetime.datetime.now().strftime("(%m-%d) %H:%M:%S"))
-        
+        # create a dataframe with date/time and corresponding intensity
         self.df = pd.DataFrame({'Intensity': self.inte, 'Date': self.dates})
-        
-
         print('Intensity: ' + str(intensity))
 
     def get_image(self):
@@ -102,6 +97,17 @@ class MUCamera:
         self.to_csv(self.df)
         print(self.df)
 
+    def daytime(self):
+        w = Webcam()
+        w.start()
+        im = w.grab_image()
+        intensity = self.average_intensity(im)
+        w.stop()
+        if intensity > 70.0:
+            return True
+        return False
+
+
 if __name__ == '__main__':
     # create csv file
     # with open('intensities.csv', 'w+') as f:
@@ -111,3 +117,4 @@ if __name__ == '__main__':
     cam = MUCamera()
     # cam.get_image()
     cam.filtered_average_intensity()
+    print(cam.daytime())
