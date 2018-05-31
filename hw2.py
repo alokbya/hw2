@@ -6,6 +6,8 @@ from PIL import ImageStat
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import random
+
 
 class MUCamera:
 
@@ -107,6 +109,13 @@ class MUCamera:
             return True
         return False
 
+    def get_color(self):
+        w = Webcam()
+        w.start()
+        im = w.grab_image()
+        colors = im.getcolors()
+        w.stop()
+        return colors
 
 if __name__ == '__main__':
     # create csv file
@@ -115,6 +124,6 @@ if __name__ == '__main__':
         
     # print(datetime.datetime.now())
     cam = MUCamera()
-    # cam.get_image()
+    cam.get_image()
     cam.filtered_average_intensity()
-    print(cam.daytime())
+    print(cam.get_color())
